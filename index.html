@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Motors — Автосалон</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Размытые фоновые пятна-свечения -->
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+
+    <div class="wrapper">
+        <!-- Шапка сайта -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">A</span>
+                <span class="logo-text">APEX MOTORS</span>
+            </div>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchBrand('mercedes', this)">Mercedes</button>
+                <button class="tab-btn" onclick="switchBrand('bmw', this)">BMW</button>
+                <button class="tab-btn" onclick="switchBrand('porsche', this)">Porsche</button>
+            </div>
+        </header>
+
+        <!-- Основной контент -->
+        <main class="main">
+            <div class="section-info">
+                <span class="collection-title">КОЛЛЕКЦИЯ 2026</span>
+                <h1 id="brand-title">Mercedes-Benz</h1>
+            </div>
+
+            <!-- Сетка карточек -->
+            <div class="cards"></div>
+        </main>
+    </div>
+
+    <!-- Модальное окно с деталями -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <button class="close-btn" onclick="closeModal()">×</button>
+            <div class="modal-content">
+                <div class="modal-img-container">
+                    <img id="modalImg" src="" alt="">
+                </div>
+                <div class="modal-info">
+                    <span class="modal-subtitle" id="modalSubtitle">MERCEDES-AMG · 2026</span>
+                    <h2 id="modalTitle"></h2>
+                    <div class="modal-price" id="modalPrice"></div>
+                    <p class="modal-desc" id="modalDesc"></p>
+                    <div class="modal-stock" id="modalStock"></div>
+                    <div class="modal-colors-block">
+                        <span class="colors-label">Цвет: Obsidian Black</span>
+                        <div class="colors-list" id="modalColors"></div>
+                    </div>
+                    <button class="btn modal-order-btn" id="modalOrderBtn">Заказать</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подключаем Axios ДО своего script.js -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
