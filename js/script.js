@@ -1,40 +1,40 @@
 let data = {};
-let activeBrand = 'mercedes'; // Активная вкладка по умолчанию
+let activeBrand = 'mercedes';
+let currentCar = null;
 
-// Загружаем data.json через Axios
+const brandNames = {
+    mercedes: 'Mercedes-Benz',
+    bmw: 'BMW',
+    porsche: 'Porsche'
+};
+
 axios.get('data/data.json')
-    .then(function(response) {
+    .then(function (response) {
         data = response.data;
-        console.log("Данные успешно загружены:", data);
-        
-        renderCards(activeBrand); // Первый вывод карточек
+        console.log(data);
+        renderCards(activeBrand);
     })
-    .catch(function(error) {
-        console.error("Ошибка при загрузке data.json:", error);
+    .catch(function (error) {
+        console.error('Не удалось загрузить data.json. Откройте проект через Live Server.', error);
     });
 
-// Функция переключения вкладок брендов
-function switchBrand(brand, element) {
-    activeBrand = brand;
+// ---------- Вкладки ----------
+const tabs = document.querySelectorAll('.tab');
 
-    // Переключаем класс active у кнопок вкладок
-    const buttons = document.querySelectorAll('.tab-btn');
-    buttons.forEach(btn => btn.classList.remove('active'));
-    element.classList.add('active');
+for (let i = 0; i < tabs.length; i++) {
+    tabs[i].addEventListener('click', function () {
+        activeBrand = tabs[i].dataset.brand;
 
-    // Меняем заголовок секции под выбранный бренд
-    const brandTitles = {
-        'mercedes': 'Mercedes-Benz',
-        'bmw': 'BMW',
-        'porsche': 'Porsche'
-    };
-    document.getElementById('brand-title').textContent = brandTitles[brand];
+        for (let j = 0; j < tabs.length; j++) {
+            tabs[j].classList.remove('active');
+        }
+        tabs[i].classList.add('active');
 
-    // Рендерим карточки выбранного бренда
-    renderCards(activeBrand);
+        renderCards(activeBrand);
+    });
 }
 
-// Функция построения сетки карточек циклом
+// ---------- Карточки ----------
 function renderCards(brand) {
     const cars = data[brand];
     let html = '';
@@ -42,68 +42,77 @@ function renderCards(brand) {
     for (let i = 0; i < cars.length; i++) {
         const car = cars[i];
 
-        // Бейдж «Осталась 1» если count равен 1
-        let badgeHtml = '';
+        let badge = '';
         if (car.count === 1) {
-            badgeHtml = `<div class="badge">Осталась 1</div>`;
+            badge = '<span class="badge"><i class="badge-dot"></i>Осталась 1</span>';
         }
 
-        html += `
-            <div class="card" onclick="openModal('${brand}', ${i})">
-                ${badgeHtml}
-                <img src="${car.image}" alt="${car.title}">
-                <h3>${car.title}</h3>
-                <p class="car-subtitle">Коллекция 2026</p>
-                <div class="card-footer">
-                    <span class="price">$${car.price.toLocaleString('en-US')}</span>
-                    <button class="btn" onclick="event.stopPropagation(); openModal('${brand}', ${i})">Заказать</button>
-                </div>
-            </div>
-        `;
+        html = html + `
+      <div class="card" onclick="openModal('${brand}', ${i})">
+        <div class="photo">
+          <span class="ph">Фото: ${car.title}</span>
+          <img src="${car.image}" alt="${car.title}" onerror="this.remove()">
+          ${badge}
+        </div>
+        <h3>${car.title}</h3>
+        <div class="card-bottom">
+          <p class="price">$${car.price.toLocaleString('en-US')}</p>
+          <button class="btn" onclick="event.stopPropagation(); orderCar('${car.title}')">Заказать</button>
+        </div>
+      </div>
+    `;
     }
 
     document.querySelector('.cards').innerHTML = html;
+    document.getElementById('brand-title').textContent = brandNames[brand];
+    document.getElementById('brand-count').textContent = cars.length + ' моделей в салоне';
 }
 
-// Открытие модального окна с деталями конкретной машины
+// ---------- Модальное окно ----------
 function openModal(brand, index) {
     const car = data[brand][index];
+    currentCar = car;
 
-    document.getElementById('modalImg').src = car.image;
-    document.getElementById('modalImg').alt = car.title;
-    document.getElementById('modalTitle').textContent = car.title;
-    document.getElementById('modalPrice').textContent = `$${car.price.toLocaleString('en-US')}`;
-    document.getElementById('modalDesc').textContent = car.description;
-    document.getElementById('modalStock').textContent = `В наличии: ${car.count} шт.`;
-
-    // Генерация кружков доступных цветов циклом
     let colorsHtml = '';
     for (let i = 0; i < car.availableColors.length; i++) {
-        colorsHtml += `
-            <span class="color-dot" style="background: ${car.availableColors[i]}"></span>
-        `;
+        const selected = i === 0 ? ' selected' : '';
+        colorsHtml = colorsHtml + `
+      <span class="color-dot${selected}" style="background: ${car.availableColors[i]}"
+            onclick="selectColor(this)"></span>
+    `;
     }
-    document.getElementById('modalColors').innerHTML = colorsHtml;
 
-    // Привязываем событие на кнопку «Заказать» внутри модалки
-    const orderBtn = document.getElementById('modalOrderBtn');
-    orderBtn.onclick = function() {
-        alert(`Заявка на ${car.title} принята!`);
-        closeModal();
-    };
+    document.getElementById('modal-photo').innerHTML = `
+    <span class="ph">Фото: ${car.title}</span>
+    <img src="${car.image}" alt="${car.title}" onerror="this.remove()">
+  `;
+    document.getElementById('modal-brand').textContent = brandNames[brand];
+    document.getElementById('modal-title').textContent = car.title;
+    document.getElementById('modal-price').textContent = '$' + car.price.toLocaleString('en-US');
+    document.getElementById('modal-desc').textContent = car.description;
+    document.getElementById('modal-count').textContent = car.count + ' шт.';
+    document.getElementById('modal-colors').innerHTML = colorsHtml;
 
-    // Показываем модальное окно
-    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('modal').classList.add('open');
 }
 
-// Закрытие модального окна
 function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('open');
+    document.getElementById('modal').classList.remove('open');
 }
 
-// Закрытие модалки по клику на тёмную область вокруг неё
-document.getElementById('modalOverlay').addEventListener('click', function(event) {
-    if (event.target === this) {
-        closeModal();
+function selectColor(el) {
+    const dots = document.querySelectorAll('#modal-colors .color-dot');
+    for (let i = 0; i < dots.length; i++) {
+        dots[i].classList.remove('selected');
     }
+    el.classList.add('selected');
+}
+
+function orderCar(title) {
+    alert('Заявка на ' + title + ' принята!');
+}
+
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-order').addEventListener('click', function () {
+    orderCar(currentCar.title);
 });
