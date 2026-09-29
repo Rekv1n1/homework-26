@@ -3,7 +3,7 @@
     {
       "title": "Mercedes-Benz S 500",
       "price": 128000,
-      "image": "images/mercedes-s500.jpg",
+      "image": "apex-motors/images/mercedes-s500.jpg",
       "description": "Флагманский седан S-класса — эталон комфорта и технологий. Пневмоподвеска, массаж всех сидений, автопилот третьего уровня и салон, в котором тишина дороже музыки.",
       "count": 3,
       "availableColors": ["#0B0B0D", "#C7C9CC", "#2E3A4E", "#5B5D5F"]
@@ -11,7 +11,7 @@
     {
       "title": "Mercedes-AMG G 63",
       "price": 185000,
-      "image": "images/mercedes-g63.jpg",
+      "image": "apex-motors/images/mercedes-g63.jpg",
       "description": "Легендарный «Гелендваген» с мотором AMG V8 на 585 л.с. Квадратная классика, которая узнаётся с любого ракурса и разгоняется до сотни за 4.5 секунды.",
       "count": 2,
       "availableColors": ["#0B0B0D", "#F4F5F6", "#4A4E52"]
@@ -19,7 +19,7 @@
     {
       "title": "Mercedes-Benz E 300",
       "price": 74000,
-      "image": "images/mercedes-e300.jpg",
+      "image": "apex-motors/images/mercedes-e300.jpg",
       "description": "Бизнес-седан для тех, кто проводит в дороге больше, чем в офисе. Гибридная установка, адаптивный круиз и огромный MBUX-экран во всю панель.",
       "count": 6,
       "availableColors": ["#1C2331", "#C7C9CC", "#7A2E2E", "#0B0B0D"]
@@ -27,7 +27,7 @@
     {
       "title": "Mercedes-Benz GLE 450",
       "price": 96000,
-      "image": "images/mercedes-gle450.jpg",
+      "image": "apex-motors/images/mercedes-gle450.jpg",
       "description": "Семейный кроссовер премиум-класса: семь мест, полный привод 4MATIC и багажник, в который помещается всё. Мягкий на трассе, уверенный на грунте.",
       "count": 4,
       "availableColors": ["#0B0B0D", "#3A4A3F", "#C7C9CC"]
